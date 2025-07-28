@@ -9,7 +9,7 @@ function App() {
       </nav>
       <Routes>
         <Route path="/banks" element={<BanksPage />} />
-        <Route path="/" element={<h1>Bem-vindo ao VaultTrack</h1>} />
+        <Route path="/" element={<h1>Bem-vindo ao new VaultTrack</h1>} />
       </Routes>
     </Router>
   )
