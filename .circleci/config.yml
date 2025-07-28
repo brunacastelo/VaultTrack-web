@@ -4,8 +4,6 @@ jobs:
   build-and-deploy:
     docker:
       - image: cimg/node:20.9
-    environment:
-      NODE_ENV: production
     steps:
       - checkout
 
