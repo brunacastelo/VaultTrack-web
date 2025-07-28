@@ -15,7 +15,7 @@ jobs:
 
       - run:
           name: Build do Vite
-          command: npm run build
+          command: ./node_modules/.bin/vite build
 
       - run:
           name: Chamar Deploy Hook da Render
