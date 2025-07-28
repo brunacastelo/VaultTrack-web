@@ -10,21 +10,27 @@ jobs:
       - checkout
 
       - run:
-          name: Instalar dependências
-          command: npm install
+          name: Limpar cache npm e instalar dependências
+          command: |
+            npm cache clean --force
+            rm -rf node_modules package-lock.json
+            npm install
 
       - run:
-          name: Verificar Vite instalado
-          command: ls -la node_modules/vite
+          name: Verificar node_modules e vite
+          command: |
+            ls -la node_modules
+            ls -la node_modules/vite
 
       - run:
-          name: Build do Vite (binário local)
+          name: Build do Vite
           command: ./node_modules/.bin/vite build
 
       - run:
           name: Chamar Deploy Hook da Render
           command: |
             curl -X POST $RENDER_DEPLOY_HOOK_FRONTEND
+
 
 workflows:
   deploy:
