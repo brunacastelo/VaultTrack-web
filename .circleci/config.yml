@@ -12,6 +12,22 @@ jobs:
       - run:
           name: Instalar dependências
           command: npm ci
+                
+      - run:
+          name: Mostrar diretório atual
+          command: pwd
+
+      - run:
+          name: Listar arquivos e pastas da raiz
+          command: ls -la
+
+      - run:
+          name: Listar conteúdo da pasta node_modules/.bin
+          command: ls -la node_modules/.bin || echo "node_modules/.bin não existe"
+
+      - run:
+          name: Mostrar caminho do Vite (se existir)
+          command: which vite || echo "vite não encontrado no PATH"
 
       - run:
           name: Build do Vite
