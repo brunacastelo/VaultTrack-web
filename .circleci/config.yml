@@ -11,7 +11,7 @@ jobs:
 
       - run:
           name: Instalar dependências
-          command: npm install
+          command: npm ci
 
       - run:
           name: Build do Vite
@@ -19,8 +19,7 @@ jobs:
 
       - run:
           name: Chamar Deploy Hook da Render
-          command: |
-            curl -X POST $RENDER_DEPLOY_HOOK_FRONTEND
+          command: curl -X POST $RENDER_DEPLOY_HOOK_FRONTEND
 
 workflows:
   deploy:
