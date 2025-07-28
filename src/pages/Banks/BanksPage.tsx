@@ -22,7 +22,7 @@ function BanksPage() {
       <h1>Bancos</h1>
       <div style={{ display: 'grid', gap: '1rem' }}>
         {banks.map((bank) => (
-          <BankCard key={bank.id} name={bank.name} balance={bank.totalValue} />
+          <BankCard id={bank.id} name={bank.name} />
         ))}
       </div>
     </div>

@@ -1,8 +1,7 @@
-function BankCard({ name, balance }) {
+function BankCard({ name, id }) {
   return (
     <div className="bank-card">
-      <h3>{name}</h3>
-      <p>Saldo: R$ {Number(balance).toFixed(2)}</p>
+      <h3>Nome: {name} - Id: {id}</h3>
     </div>
   )
 }
