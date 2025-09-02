@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { getAllBanks, deleteBank } from '../../services/bankService'
+import { createBank, getAllBanks, deleteBank, updateBank } from '../../services/bankService'
 import BankCard from '../../components/BankCard'
 
 import Grid from '@mui/material/Grid'
@@ -8,33 +8,69 @@ import Typography from '@mui/material/Typography'
 import Fab from '@mui/material/Fab'
 import CircularProgress from '@mui/material/CircularProgress'
 import AddIcon from '@mui/icons-material/Add'
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material'
 
 function BanksPage() {
   const [banks, setBanks] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
+  const [openModal, setOpenModal] = useState(false)
+  const [newBankName, setNewBankName] = useState('')
+  const [editBank, setEditBank] = useState(null)
+
   useEffect(() => {
+    fetchBanks()
+  }, [])
+
+  const fetchBanks = () => {
+    setLoading(true)
     getAllBanks()
       .then(setBanks)
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false))
-  }, [])
-
-  const handleEdit = (bankId: string) => {
-    // Abrir modal para edição
-    console.log('Editar banco', bankId)
   }
 
-  const handleDelete = (bankId: string) => {
-    // Mostrar diálogo de confirmação
-    deleteBank(bankId)
-    console.log('Deletar banco', bankId)
+  const handleEdit = (bank: any) => {
+    setEditBank(bank)
+    handleOpenModal()
+    setNewBankName(bank.name)
   }
 
-  const handleAdd = () => {
-    // Abrir modal para novo banco
-    console.log('Adicionar novo banco')
+  const handleDelete = async (bankId: string) => {
+    try {
+      await deleteBank(bankId)
+      await fetchBanks()
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  const handleOpenModal = () => {
+    setOpenModal(true)
+    setNewBankName('')
+  }
+
+  const handleCloseModal = () => {
+    setOpenModal(false)
+    setEditBank(null)
+  }
+
+  const handleSaveBank = async () => {
+    if (!newBankName.trim()) return
+    try {
+      if(editBank) {
+        await updateBank({ id: editBank.id, name: newBankName })
+        setEditBank(null)
+      } else {
+        await createBank(newBankName)
+      }
+
+      await fetchBanks()
+      setOpenModal(false)
+    } catch (err) {
+      console.error(err)
+    }
   }
 
   if (loading) {
@@ -65,7 +101,7 @@ function BanksPage() {
             <BankCard
               id={bank.id}
               name={bank.name}
-              onEdit={() => handleEdit(bank.id)}
+              onEdit={() => handleEdit(bank)}
               onDelete={() => handleDelete(bank.id)}
             />
           </Grid>
@@ -76,10 +112,33 @@ function BanksPage() {
         color="primary"
         aria-label="add"
         sx={{ position: 'fixed', bottom: 16, right: 16 }}
-        onClick={handleAdd}
+        onClick={handleOpenModal}
       >
         <AddIcon />
       </Fab>
+
+      <Dialog open={openModal} onClose={handleCloseModal}>
+        <DialogTitle>{editBank ? 'Editar banco' : 'Novo banco'}</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Nome do banco"
+            type="text"
+            fullWidth
+            value={newBankName}
+            onChange={(e) => setNewBankName(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseModal}>Cancelar</Button>
+          <Button onClick={handleSaveBank} variant="contained" color="primary">
+            Salvar
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+
     </Box>
   )
 }

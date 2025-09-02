@@ -17,7 +17,42 @@ export async function deleteBank(bankId: string) {
   })
 
   if (!response.ok) {
-    throw new Error('Error deleting banks')
+    throw new Error('Error deleting bank')
   }
+
+  if (response.status !== 204) {
+    return response.json()
+  }
+
+  return null
+}
+
+export async function createBank(bankName: string) {
+  const response = await fetch(`${API_URL}/api/banks`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      name: bankName
+    })
+  })
+
+  if (response.status !== 201) {
+    throw new Error('Error creating bank')
+  }
+
   return response.json()
+}
+
+export async function updateBank(bank: any) {
+  const response = await fetch(`${API_URL}/api/banks/` + bank.id, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      name: bank.name
+    })
+  })
 }
